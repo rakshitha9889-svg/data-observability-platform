@@ -1,0 +1,40 @@
+random_seed: 42
+
+generation:
+  start_date: "2026-04-01"
+  number_of_days: 90
+  number_of_customers: 2000
+  number_of_products: 300
+  average_orders_per_day: 80
+  number_of_warehouses: 4
+
+output:
+  directory: "data/generated"
+
+business:
+  countries:
+    - Germany
+    - France
+    - Netherlands
+    - Belgium
+    - Austria
+
+  categories:
+    - Electronics
+    - Home
+    - Beauty
+    - Sports
+    - Books
+    - Fashion
+
+  payment_methods:
+    - credit_card
+    - paypal
+    - bank_transfer
+    - gift_card
+
+  warehouses:
+    - WH_BERLIN
+    - WH_HAMBURG
+    - WH_MUNICH
+    - WH_COLOGNE
