@@ -1,0 +1,57 @@
+# Python virtual environment
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Ruff
+.ruff_cache/
+
+# macOS
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Generated data
+data/incoming/*
+data/archive/*
+data/rejected/*
+data/generated/*
+
+# Preserve directories in Git
+!data/incoming/.gitkeep
+!data/archive/.gitkeep
+!data/rejected/.gitkeep
+!data/generated/.gitkeep
+
+# dbt-generated files
+dbt_project/target/
+dbt_project/logs/
+dbt_project/dbt_packages/
+
+# Airflow-generated files
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+
+# IDE settings
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
