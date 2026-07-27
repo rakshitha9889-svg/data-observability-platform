@@ -1,0 +1,201 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Latest standardized record for each customer.
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+
+      - name: email
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_status
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - active
+                  - inactive
+                  - suspended
+
+  - name: stg_products
+    description: Latest standardized record for each product.
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+      - name: unit_price
+        tests:
+          - not_null
+
+      - name: active
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: Deduplicated and standardized orders.
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
+           
+
+      - name: order_status
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - completed
+                  - shipped
+                  - cancelled
+                  - processing
+      - name: currency
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                - EUR
+
+      - name: order_total
+        tests:
+          - not_null
+
+  - name: stg_order_items
+    description: Deduplicated and standardized order items.
+    columns:
+      - name: item_id
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+      - name: quantity
+        tests:
+          - not_null
+
+  - name: stg_payments
+    description: Deduplicated and standardized payments.
+    columns:
+      - name: payment_id
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: payment_status
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - successful
+                  - failed
+                  - pending
+                  - refunded
+
+      - name: payment_method
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - credit_card
+                  - paypal
+                  - bank_transfer
+                  - gift_card
+      - name: payment_amount
+        tests:
+          - not_null
+
+  - name: stg_shipments
+    description: Deduplicated and standardized shipments.
+    columns:
+      - name: shipment_id
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+
+      - name: shipment_status
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - delivered
+                  - in_transit
+                  - delayed
+                  - cancelled
+
+      - name: warehouse_id
+        tests:
+          - not_null
+
+  - name: stg_inventory
+    description: Deduplicated daily inventory snapshots.
+    columns:
+      - name: inventory_date
+        tests:
+          - not_null
+
+      - name: warehouse_id
+        tests:
+          - not_null
+
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
+
+      - name: stock_quantity
+        tests:
+          - not_null
+
+      - name: reorder_level
+        tests:
+          - not_null

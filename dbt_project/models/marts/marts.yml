@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: dim_customer
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_product
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_orders
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+
+  - name: fact_payments
+    columns:
+      - name: payment_id
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('fact_orders')
+                field: order_id
+              
+
+  - name: fact_shipments
+    columns:
+      - name: shipment_id
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('fact_orders')
+                field: order_id

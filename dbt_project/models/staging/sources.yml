@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Raw e-commerce records loaded by the Python ingestion pipeline.
+    schema: raw
+
+    config:
+      loaded_at_field: ingested_at
+      freshness:
+        warn_after:
+          count: 2
+          period: day
+        error_after:
+          count: 7
+          period: day
+
+    tables:
+      - name: customers
+        description: Raw customer master data.
+
+      - name: products
+        description: Raw product master data.
+
+      - name: orders
+        description: Raw customer orders.
+
+      - name: order_items
+        description: Raw order line items.
+
+      - name: payments
+        description: Raw payment transactions.
+
+      - name: shipments
+        description: Raw shipment records.
+
+      - name: inventory
+        description: Raw daily inventory snapshots.
