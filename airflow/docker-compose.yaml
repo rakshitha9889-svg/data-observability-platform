@@ -54,10 +54,16 @@ x-airflow-common:
   env_file:
     - ${ENV_FILE_PATH:-.env}
   environment:
+  
+    
     
 
 
     &airflow-common-env
+    AIRFLOW__OPENLINEAGE__TRANSPORT: '{"type": "console"}'
+    AIRFLOW__OPENLINEAGE__NAMESPACE: data-observability-platform
+    AIRFLOW__OPENLINEAGE__DISABLED: "false"
+    AIRFLOW__OPENLINEAGE__DEBUG_MODE: "true"
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
     AIRFLOW__CORE__AUTH_MANAGER: airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow

@@ -1,0 +1,97 @@
+assets:
+  - unique_name: kpi.daily_order_volume
+    asset_type: kpi
+    object_name: daily_order_volume
+    owner_name: Sales Analytics
+    description: Number of customer orders received per day.
+
+  - unique_name: kpi.gross_revenue
+    asset_type: kpi
+    object_name: gross_revenue
+    owner_name: Finance Analytics
+    description: Total value of non-cancelled customer orders.
+
+  - unique_name: kpi.average_order_value
+    asset_type: kpi
+    object_name: average_order_value
+    owner_name: Sales Analytics
+    description: Average revenue generated per order.
+
+  - unique_name: kpi.payment_success_rate
+    asset_type: kpi
+    object_name: payment_success_rate
+    owner_name: Payments Operations
+    description: Percentage of payments completed successfully.
+
+  - unique_name: kpi.on_time_delivery_rate
+    asset_type: kpi
+    object_name: on_time_delivery_rate
+    owner_name: Logistics Analytics
+    description: Percentage of delivered shipments arriving on time.
+
+  - unique_name: kpi.stockout_rate
+    asset_type: kpi
+    object_name: stockout_rate
+    owner_name: Inventory Operations
+    description: Percentage of inventory records with no available stock.
+
+  - unique_name: dashboard.executive_sales
+    asset_type: dashboard
+    object_name: executive_sales
+    owner_name: Business Intelligence
+    description: Executive sales and revenue dashboard.
+
+  - unique_name: dashboard.payment_operations
+    asset_type: dashboard
+    object_name: payment_operations
+    owner_name: Payments Operations
+    description: Payment reliability and failure dashboard.
+
+  - unique_name: dashboard.logistics_operations
+    asset_type: dashboard
+    object_name: logistics_operations
+    owner_name: Logistics Analytics
+    description: Delivery and shipment-performance dashboard.
+
+  - unique_name: dashboard.inventory_operations
+    asset_type: dashboard
+    object_name: inventory_operations
+    owner_name: Inventory Operations
+    description: Inventory health and stockout dashboard.
+
+edges:
+  - upstream: model.data_observability.fact_orders
+    downstream: kpi.daily_order_volume
+
+  - upstream: model.data_observability.fact_orders
+    downstream: kpi.gross_revenue
+
+  - upstream: model.data_observability.fact_orders
+    downstream: kpi.average_order_value
+
+  - upstream: model.data_observability.fact_payments
+    downstream: kpi.payment_success_rate
+
+  - upstream: model.data_observability.fact_shipments
+    downstream: kpi.on_time_delivery_rate
+
+  - upstream: model.data_observability.fact_inventory_daily
+    downstream: kpi.stockout_rate
+
+  - upstream: kpi.daily_order_volume
+    downstream: dashboard.executive_sales
+
+  - upstream: kpi.gross_revenue
+    downstream: dashboard.executive_sales
+
+  - upstream: kpi.average_order_value
+    downstream: dashboard.executive_sales
+
+  - upstream: kpi.payment_success_rate
+    downstream: dashboard.payment_operations
+
+  - upstream: kpi.on_time_delivery_rate
+    downstream: dashboard.logistics_operations
+
+  - upstream: kpi.stockout_rate
+    downstream: dashboard.inventory_operations

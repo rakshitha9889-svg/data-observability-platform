@@ -4,3 +4,4 @@ psycopg2-binary>=2.9.10,<3.0
 python-dotenv>=1.1.1,<2.0
 structlog>=25.4.0,<26.0
 dbt-postgres>=1.10,<1.12
+apache-airflow-providers-openlineage==2.19.0
