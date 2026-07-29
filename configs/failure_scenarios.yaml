@@ -1,0 +1,60 @@
+scenarios:
+  missing_payments_file:
+    batch_date: "2026-04-05"
+    description: Payment file is absent from an otherwise complete batch.
+    expected_detection_layer: pre_ingestion
+    severity: high
+
+  duplicate_order_id:
+    batch_date: "2026-04-06"
+    description: Two order records contain the same order ID.
+    expected_detection_layer: ingestion_validation
+    severity: medium
+
+  null_customer_id:
+    batch_date: "2026-04-07"
+    description: An order has a null customer ID.
+    expected_detection_layer: ingestion_validation
+    severity: medium
+
+  unknown_customer_id:
+    batch_date: "2026-04-08"
+    description: An order references a nonexistent customer.
+    expected_detection_layer: dbt_relationship_test
+    severity: high
+
+  negative_payment:
+    batch_date: "2026-04-09"
+    description: A payment contains a negative amount.
+    expected_detection_layer: ingestion_validation
+    severity: critical
+
+  removed_order_column:
+    batch_date: "2026-04-10"
+    description: The customer_id column is removed from the order file.
+    expected_detection_layer: schema_validation
+    severity: high
+
+  order_volume_drop:
+    batch_date: "2026-04-11"
+    description: Daily order volume falls below the expected threshold.
+    expected_detection_layer: pre_ingestion
+    severity: high
+
+  excessive_delivery_delay:
+    batch_date: "2026-04-12"
+    description: A shipment is delivered 30 days after its expected date.
+    expected_detection_layer: dbt_business_rule
+    severity: medium
+
+  invalid_order_status:
+    batch_date: "2026-04-13"
+    description: An order contains an unsupported status value.
+    expected_detection_layer: ingestion_validation
+    severity: medium
+
+  order_total_mismatch:
+    batch_date: "2026-04-14"
+    description: The order total differs from its order-item total.
+    expected_detection_layer: dbt_reconciliation_test
+    severity: critical

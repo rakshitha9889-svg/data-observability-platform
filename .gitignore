@@ -60,3 +60,8 @@ airflow/.env
 airflow/logs/
 airflow/config/airflow.cfg
 airflow/config/*.json
+
+observability/incidents/active_experiment.json
+
+observability/incidents/history/
+data/archive/experiments/

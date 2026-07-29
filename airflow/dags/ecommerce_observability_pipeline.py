@@ -119,7 +119,16 @@ with DAG(
         task_id="load_raw_data",
         bash_command=f"""
             cd "{PROJECT_DIRECTORY}"
+
+            set +e
             python -m ingestion.run_pipeline
+            INGESTION_EXIT_CODE=$?
+            set -e
+
+            python -m \
+                observability.quality.detect_ingestion_incident
+
+            exit $INGESTION_EXIT_CODE
         """,
     )
 
@@ -142,12 +151,16 @@ with DAG(
             set -e
 
             cd "{PROJECT_DIRECTORY}"
-            python -m observability.quality.capture_dbt_results
+
+            python -m \
+                observability.quality.capture_dbt_results
+
+            python -m \
+                observability.quality.detect_dbt_incident
 
             exit $DBT_EXIT_CODE
         """,
     )
-
     notify_success = BashOperator(
         task_id="notify_success",
         bash_command="""
@@ -157,11 +170,22 @@ with DAG(
 
     validated_files = validate_source_filenames()
 
+    run_pre_ingestion_checks = BashOperator(
+            task_id="run_pre_ingestion_checks",
+            bash_command=f"""
+                cd "{PROJECT_DIRECTORY}"
+                python -m observability.quality.pre_ingestion_checks
+            """,
+        )
+
     (
         wait_for_source_files
         >> validated_files
+        >> run_pre_ingestion_checks
         >> load_raw_data
         >> run_dbt_models
         >> run_dbt_tests_and_capture_results
         >> notify_success
     )
+
+   
