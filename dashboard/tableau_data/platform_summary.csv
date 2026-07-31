@@ -1,0 +1,2 @@
+total_pipeline_runs,successful_pipeline_runs,pipeline_success_rate_percentage,latest_pipeline_completion,freshness_hours,total_quality_tests,passed_quality_tests,failed_quality_tests,test_pass_rate_percentage,open_incidents,resolved_incidents,mttr_minutes,total_experiments,detected_experiments,detection_rate_percentage
+19,17,89.47,2026-07-29 16:58:41.429051+00,1.10,1826,1744,82,95.51,1,10,3.74,11,11,100.00
