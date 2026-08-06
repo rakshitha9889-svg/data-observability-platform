@@ -1,0 +1,44 @@
+import argparse
+import json
+
+from assistant.response_generator import IncidentResponseGenerator
+from assistant.retrieval.evidence_retriever import (
+    IncidentEvidenceRetriever,
+)
+
+
+def parse_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate a grounded investigation response for an incident."
+        )
+    )
+
+    parser.add_argument(
+        "incident_id",
+        help="UUID of the incident to investigate.",
+    )
+
+    return parser.parse_args()
+
+
+def main() -> None:
+    arguments = parse_arguments()
+
+    retriever = IncidentEvidenceRetriever()
+    generator = IncidentResponseGenerator()
+
+    evidence_bundle = retriever.build_evidence_bundle(arguments.incident_id)
+
+    response = generator.generate(evidence_bundle)
+
+    print(
+        json.dumps(
+            response.model_dump(),
+            indent=2,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

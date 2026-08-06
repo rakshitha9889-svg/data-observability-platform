@@ -1,0 +1,11 @@
+fastapi
+httpx
+psycopg2-binary
+pydantic
+python-dotenv
+requests
+sqlalchemy
+uvicorn
+pytest
+pytest-cov
+ruff

@@ -1,0 +1,177 @@
+[
+  {
+    "question": "What happened in this incident?",
+    "expected_type": "incident_summary",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["negative_payment", "critical", "resolved"]
+  },
+  {
+    "question": "Summarize the incident.",
+    "expected_type": "incident_summary",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["raw.payments"]
+  },
+  {
+    "question": "Describe this incident.",
+    "expected_type": "incident_summary",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["data_quality"]
+  },
+  {
+    "question": "What was the likely root cause?",
+    "expected_type": "cause_or_hypothesis",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["-500.00"]
+  },
+  {
+    "question": "Why did the payment incident occur?",
+    "expected_type": "cause_or_hypothesis",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["failure-injection"]
+  },
+  {
+    "question": "What hypothesis explains this failure?",
+    "expected_type": "cause_or_hypothesis",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["payment"]
+  },
+  {
+    "question": "What evidence confirms the invalid payment?",
+    "expected_type": "confirmed_evidence",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["PAY_00000631", "-500.0"]
+  },
+  {
+    "question": "Which source file contained the failure?",
+    "expected_type": "confirmed_evidence",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["payments_2026-04-09.csv"]
+  },
+  {
+    "question": "Which failed rule detected the record?",
+    "expected_type": "confirmed_evidence",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["amount must not be negative"]
+  },
+  {
+    "question": "Was the invalid record quarantined?",
+    "expected_type": "confirmed_evidence",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["quarantined"]
+  },
+  {
+    "question": "Which downstream KPIs were affected?",
+    "expected_type": "affected_assets",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["unknown"]
+  },
+  {
+    "question": "What was the downstream impact?",
+    "expected_type": "affected_assets",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["not necessarily absent"]
+  },
+  {
+    "question": "Which assets and dashboards were affected?",
+    "expected_type": "affected_assets",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["No downstream impacted assets"]
+  },
+  {
+    "question": "What is the incident status and severity?",
+    "expected_type": "status",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["resolved", "critical"]
+  },
+  {
+    "question": "When was the incident detected and resolved?",
+    "expected_type": "status",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["detected", "resolved"]
+  },
+  {
+    "question": "Were any dbt tests related to this incident?",
+    "expected_type": "quality_tests",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["No directly related failed dbt"]
+  },
+  {
+    "question": "Show the related quality test failures.",
+    "expected_type": "quality_tests",
+    "expected_refusal": false,
+    "citation_required": true,
+    "required_terms": ["ingestion validation"]
+  },
+  {
+    "question": "Are there relevant Airflow logs?",
+    "expected_type": "airflow_logs",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["No directly relevant Airflow"]
+  },
+  {
+    "question": "Which DAG task failed for this incident?",
+    "expected_type": "airflow_logs",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["will not attach unrelated"]
+  },
+  {
+    "question": "What should the data engineer investigate next?",
+    "expected_type": "recommended_investigation",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["recommendations only"]
+  },
+  {
+    "question": "How should this incident be fixed?",
+    "expected_type": "recommended_investigation",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["not executed"]
+  },
+  {
+    "question": "What remediation was executed by the assistant?",
+    "expected_type": "recommended_investigation",
+    "expected_refusal": false,
+    "citation_required": false,
+    "required_terms": ["has not executed"]
+  },
+  {
+    "question": "What will the weather be tomorrow?",
+    "expected_type": "unsupported",
+    "expected_refusal": true,
+    "citation_required": false,
+    "required_terms": ["cannot answer"]
+  },
+  {
+    "question": "Who won the football match?",
+    "expected_type": "unsupported",
+    "expected_refusal": true,
+    "citation_required": false,
+    "required_terms": ["permitted incident evidence"]
+  },
+  {
+    "question": "Write a recipe for pasta.",
+    "expected_type": "unsupported",
+    "expected_refusal": true,
+    "citation_required": false,
+    "required_terms": ["cannot answer"]
+  }
+]

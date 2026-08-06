@@ -1,9 +1,91 @@
+import os
+
 import pandas as pd
 import plotly.express as px
+import requests
 import streamlit as st
 
 from database import clear_query_cache, execute_query, test_connection
 
+ASSISTANT_API_URL = os.getenv(
+    "ASSISTANT_API_URL",
+    "http://localhost:8000",
+)
+
+
+def call_assistant_api(
+    endpoint: str,
+) -> dict:
+    url = f"{ASSISTANT_API_URL}{endpoint}"
+
+    try:
+        response = requests.get(
+            url,
+            timeout=30,
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+
+    except requests.ConnectionError as error:
+        raise RuntimeError(
+            "The incident-assistant API is unavailable. "
+            "Start FastAPI on port 8000."
+        ) from error
+
+    except requests.Timeout as error:
+        raise RuntimeError(
+            "The incident-assistant API request timed out."
+        ) from error
+
+    except requests.HTTPError as error:
+        detail = response.text
+
+        raise RuntimeError(
+            f"Assistant API returned an error: {detail}"
+        ) from error
+
+def post_assistant_api(
+    endpoint: str,
+    payload: dict,
+) -> dict:
+    url = f"{ASSISTANT_API_URL}{endpoint}"
+
+    try:
+        response = requests.post(
+            url,
+            json=payload,
+            timeout=30,
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+
+    except requests.ConnectionError as error:
+        raise RuntimeError(
+            "The incident-assistant API is unavailable. "
+            "Start FastAPI on port 8000."
+        ) from error
+
+    except requests.Timeout as error:
+        raise RuntimeError(
+            "The incident-assistant API request timed out."
+        ) from error
+
+    except requests.HTTPError as error:
+        raise RuntimeError(
+            f"Assistant API returned an error: {response.text}"
+        ) from error
+
+@st.cache_data(ttl=15)
+def load_assistant_incidents() -> list[dict]:
+    payload = call_assistant_api(
+        "/api/v1/incidents?limit=100"
+    )
+
+    return payload.get("incidents", [])
 
 st.set_page_config(
     page_title="Data Observability Platform",
@@ -797,7 +879,333 @@ def show_lineage() -> None:
             hide_index=True,
         )
 
+def show_assistant() -> None:
+    st.header("Evidence-Grounded Incident Assistant")
 
+
+    st.caption(
+        "Investigate incidents using stored incident records, "
+        "quality tests, Airflow events, historical resolutions "
+        "and lineage evidence."
+    )
+
+    try:
+        incidents = load_assistant_incidents()
+
+    except RuntimeError as error:
+        st.error(str(error))
+
+        st.code(
+            "python -m uvicorn "
+            "assistant.api.main:app "
+            "--host 0.0.0.0 "
+            "--port 8000 "
+            "--reload"
+        )
+
+        return
+
+    if not incidents:
+        st.info("No incidents are available for investigation.")
+        return
+
+    incident_options: dict[str, str] = {}
+
+    for incident in incidents:
+        incident_id = incident["incident_id"]
+
+        label = (
+            f"{incident.get('severity', 'unknown').upper()} | "
+            f"{incident.get('status', 'unknown')} | "
+            f"{incident.get('title', 'Untitled incident')} | "
+            f"{incident_id}"
+        )
+
+        incident_options[label] = incident_id
+
+    selected_label = st.selectbox(
+        "Select an incident",
+        options=list(incident_options.keys()),
+    )
+
+    selected_incident_id = incident_options[selected_label]
+
+    if st.button(
+        "Investigate Incident",
+        type="primary",
+        use_container_width=True,
+    ):
+        with st.spinner(
+            "Retrieving and analysing stored evidence..."
+        ):
+            try:
+                investigation = call_assistant_api(
+                    (
+                        f"/api/v1/incidents/"
+                        f"{selected_incident_id}/investigation"
+                    )
+                )
+
+                evidence_bundle = call_assistant_api(
+                    (
+                        f"/api/v1/incidents/"
+                        f"{selected_incident_id}/evidence"
+                    )
+                )
+
+            except RuntimeError as error:
+                st.error(str(error))
+                return
+
+        st.session_state["investigation"] = investigation
+        st.session_state["evidence_bundle"] = evidence_bundle
+        st.session_state["investigated_incident_id"] = (
+            selected_incident_id
+        )
+
+    investigation = st.session_state.get("investigation")
+    evidence_bundle = st.session_state.get("evidence_bundle")
+    investigated_incident_id = st.session_state.get(
+        "investigated_incident_id"
+    )
+
+    if (
+        not investigation
+        or investigated_incident_id != selected_incident_id
+    ):
+        st.info(
+            "Select an incident and click "
+            "'Investigate Incident'."
+        )
+
+        return
+
+    confidence = investigation.get(
+        "confidence",
+        "unknown",
+    )
+
+    confidence_color = {
+        "high": "green",
+        "medium": "orange",
+        "low": "red",
+    }.get(confidence.lower(), "grey")
+
+    st.subheader("Incident Summary")
+
+    st.write(
+        investigation.get(
+            "incident_summary",
+            "No incident summary was generated.",
+        )
+    )
+
+    st.markdown(
+        (
+            f"**Confidence:** "
+            f":{confidence_color}[{confidence.upper()}]"
+        )
+    )
+
+    st.subheader("Confirmed Evidence")
+
+    confirmed_evidence = investigation.get(
+        "confirmed_evidence",
+        [],
+    )
+
+    if confirmed_evidence:
+        for evidence_item in confirmed_evidence:
+            st.markdown(f"- {evidence_item}")
+    else:
+        st.info("No confirmed evidence was returned.")
+
+    st.subheader("Likely Causes or Hypotheses")
+
+    hypotheses = investigation.get(
+        "likely_causes_or_hypotheses",
+        [],
+    )
+
+    for hypothesis in hypotheses:
+        st.markdown(f"- {hypothesis}")
+
+    st.warning(
+        "Hypotheses are not confirmed facts unless explicitly "
+        "supported by a cited evidence record."
+    )
+
+    st.subheader("Affected Assets")
+
+    affected_assets = investigation.get(
+        "affected_assets",
+        [],
+    )
+
+    for affected_asset in affected_assets:
+        st.markdown(f"- {affected_asset}")
+
+    st.subheader("Recommended Investigation")
+
+    recommendations = investigation.get(
+        "recommended_investigation",
+        [],
+    )
+
+    for recommendation in recommendations:
+        st.markdown(f"- {recommendation}")
+
+    st.info(
+        "These are recommended investigation steps. "
+        "The assistant has not executed any remediation."
+    )
+
+    limitations = investigation.get(
+        "limitations",
+        [],
+    )
+
+    if limitations:
+        st.subheader("Limitations")
+
+        for limitation in limitations:
+            st.markdown(f"- {limitation}")
+
+    citations = investigation.get(
+        "citations",
+        [],
+    )
+
+    if citations:
+        st.subheader("Evidence Citations")
+
+        for citation in citations:
+            st.code(citation)
+
+    if evidence_bundle:
+        with st.expander("View Raw Evidence Bundle"):
+            st.json(evidence_bundle)
+        st.divider()
+
+    st.subheader("Ask About This Incident")
+
+    st.caption(
+        "Ask about the summary, cause, evidence, impact, "
+        "quality tests, Airflow logs, status or recommended "
+        "investigation."
+    )
+
+    question = st.text_input(
+        "Your question",
+        placeholder=(
+            "For example: What evidence confirms this incident?"
+        ),
+        key=f"incident_question_{selected_incident_id}",
+    )
+
+    ask_button = st.button(
+        "Ask Assistant",
+        type="primary",
+        use_container_width=True,
+        disabled=not question.strip(),
+    )
+
+    if ask_button:
+        with st.spinner(
+            "Searching the permitted incident evidence..."
+        ):
+            try:
+                question_response = post_assistant_api(
+                    (
+                        f"/api/v1/incidents/"
+                        f"{selected_incident_id}/questions"
+                    ),
+                    {
+                        "question": question.strip(),
+                    },
+                )
+
+            except RuntimeError as error:
+                st.error(str(error))
+                return
+
+        st.session_state["question_response"] = (
+            question_response
+        )
+
+        st.session_state["question_incident_id"] = (
+            selected_incident_id
+        )
+
+    question_response = st.session_state.get(
+        "question_response"
+    )
+
+    question_incident_id = st.session_state.get(
+        "question_incident_id"
+    )
+
+    if (
+        question_response
+        and question_incident_id == selected_incident_id
+    ):
+        st.subheader("Assistant Answer")
+
+        if question_response.get("refused"):
+            st.warning(
+                question_response.get(
+                    "answer",
+                    "The question could not be answered.",
+                )
+            )
+
+        else:
+            st.success(
+                question_response.get(
+                    "answer",
+                    "No answer was returned.",
+                )
+            )
+
+        answer_column, confidence_column = st.columns(2)
+
+        answer_column.metric(
+            "Response Type",
+            question_response.get(
+                "response_type",
+                "unknown",
+            ),
+        )
+
+        confidence_column.metric(
+            "Confidence",
+            question_response.get(
+                "confidence",
+                "unknown",
+            ).upper(),
+        )
+
+        answer_citations = question_response.get(
+            "citations",
+            [],
+        )
+
+        if answer_citations:
+            st.markdown("**Answer citations**")
+
+            for citation in answer_citations:
+                st.code(citation)
+
+        answer_limitations = question_response.get(
+            "limitations",
+            [],
+        )
+
+        if answer_limitations:
+            with st.expander("Answer limitations"):
+                for limitation in answer_limitations:
+                    st.markdown(f"- {limitation}")
+                    
 st.title("🔭 AI-Assisted Data Observability Platform")
 
 st.caption(
@@ -811,13 +1219,14 @@ with st.sidebar:
 
     selected_page = st.radio(
         "Select a page",
-        [
-            "Overview",
-            "Pipeline Runs",
-            "Data Quality",
-            "Incidents",
-            "Lineage",
-        ],
+      [
+    "Overview",
+    "Pipeline Runs",
+    "Data Quality",
+    "Incidents",
+    "Lineage",
+    "Assistant",
+        ]   ,
     )
 
     st.divider()
@@ -852,3 +1261,6 @@ elif selected_page == "Incidents":
 
 elif selected_page == "Lineage":
     show_lineage()
+
+elif selected_page == "Assistant":
+    show_assistant()    

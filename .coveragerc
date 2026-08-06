@@ -1,0 +1,20 @@
+[run]
+branch = True
+source =
+    assistant
+
+omit =
+    assistant/evaluation/*
+    assistant/answer_incident.py
+    assistant/retrieval/build_evidence.py
+
+[report]
+show_missing = True
+skip_covered = False
+precision = 2
+fail_under = 60
+
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+    raise NotImplementedError
