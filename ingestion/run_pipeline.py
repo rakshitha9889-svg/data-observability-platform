@@ -34,7 +34,6 @@ from ingestion.validation import (
     validate_dataframe,
 )
 
-
 PIPELINE_NAME = "ecommerce_file_ingestion"
 
 

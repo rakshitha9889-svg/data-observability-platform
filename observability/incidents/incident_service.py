@@ -9,7 +9,6 @@ from uuid import UUID
 from dotenv import load_dotenv
 from sqlalchemy import Engine, create_engine, text
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 ACTIVE_EXPERIMENT_PATH = (

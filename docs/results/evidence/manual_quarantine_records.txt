@@ -1,0 +1,14 @@
+-[ RECORD 1 ]-----+--------------------------------------------------------------------------------------------------------------------------------------------------------
+quarantine_id     | eee95ce5-58f2-44d5-aa01-f48bcea17fa9
+entity_name       | orders
+source_file       | orders_2026-04-07.csv
+source_row_number | 2
+failed_rule       | customer_id must not be null or empty
+failure_type      | record_validation
+failure_reason    | customer_id must not be null or empty
+severity          | medium
+record_data       | {"status": "completed", "currency": "EUR", "order_id": "ORD_00000478", "order_date": "2026-04-07 18:23:01", "customer_id": null, "order_total": 395.12}
+quarantined_at    | 2026-07-29 15:46:08.946649+00
+resolved          | f
+resolution_notes  | 
+

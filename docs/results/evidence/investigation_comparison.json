@@ -1,0 +1,11 @@
+{
+  "manual_incident_id": "1d2cb9de-abdb-4e46-8ab5-805b0d035109",
+  "assisted_incident_id": "883bcb2b-64b0-4fb2-b25f-f9389e1ec7b2",
+  "manual_investigation_seconds": 893.0,
+  "manual_investigation_minutes": 14.88,
+  "assisted_investigation_seconds": 584.0,
+  "assisted_investigation_minutes": 9.73,
+  "time_saved_seconds": 309.0,
+  "time_saved_minutes": 5.15,
+  "time_reduction_percentage": 34.6
+}

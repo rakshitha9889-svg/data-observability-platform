@@ -9,7 +9,7 @@ services:
     image: data-observability-incident-api:local
 
     environment:
-      DATABASE_URL: postgresql+psycopg2://commerce_user:commerce_password@postgres:5432/commerce
+      DATABASE_URL: postgresql+psycopg2://commerce_user:${POSTGRES_PASSWORD}@postgres:5432/commerce
 
     ports:
       - "8000:8000"
@@ -39,7 +39,7 @@ services:
     image: data-observability-dashboard:local
 
     environment:
-      DATABASE_URL: postgresql+psycopg2://commerce_user:commerce_password@postgres:5432/commerce
+      DATABASE_URL: postgresql+psycopg2://commerce_user:${POSTGRES_PASSWORD}@postgres:5432/commerce
       ASSISTANT_API_URL: http://incident-api:8000
 
     ports:

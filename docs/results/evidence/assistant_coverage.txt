@@ -1,0 +1,34 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/rakshithars/Documents/data-observability-platform
+configfile: pytest.ini
+testpaths: tests
+plugins: Faker-37.4.0, typeguard-4.5.2, anyio-4.14.2, cov-6.2.1
+collected 38 items
+
+tests/e2e/test_incident_workflow.py .......                              [ 18%]
+tests/integration/test_incident_api.py ............                      [ 50%]
+tests/unit/test_incident_assistant.py ...................                [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.13.5-final-0 _______________
+
+Name                                        Stmts   Miss Branch BrPart   Cover   Missing
+----------------------------------------------------------------------------------------
+assistant/__init__.py                           0      0      0      0 100.00%
+assistant/api/__init__.py                       0      0      0      0 100.00%
+assistant/api/main.py                          55     17      6      0  62.30%   70-109, 124-125, 169-170
+assistant/config.py                            23      1      2      1  92.00%   25
+assistant/models.py                            35      0      0      0 100.00%
+assistant/prompts/__init__.py                   0      0      0      0 100.00%
+assistant/question_answerer.py                 51      9     24      3  81.33%   185-187, 216-230, 292
+assistant/response_generator.py               157     29     74     35  71.43%   18->exit, 28, 33, 44, 49, 148->154, 171->175, 180->183, 183->186, 186->189, 197->206, 200->206, 206->218, 219-227, 230-238, 241, 261->284, 268->271, 271->274, 274->277, 287, 301-312, 315, 334-351, 365->371, 371->378, 378->384, 384->390, 399->402, 402->405, 406, 409, 412, 415, 420
+assistant/retrieval/__init__.py                 0      0      0      0 100.00%
+assistant/retrieval/database.py                13      1      2      1  86.67%   30
+assistant/retrieval/evidence_retriever.py      61      3     22      6  89.16%   150, 299, 308->313, 313->316, 317, 319->322
+----------------------------------------------------------------------------------------
+TOTAL                                         395     60    130     46  77.90%
+Coverage XML written to file coverage.xml
+Coverage JSON written to file docs/results/evidence/assistant_coverage.json
+Required test coverage of 60% reached. Total coverage: 77.90%
+============================== 38 passed in 0.58s ==============================

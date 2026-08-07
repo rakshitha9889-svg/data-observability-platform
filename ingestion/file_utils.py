@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from pathlib import Path
 
-
 ENTITY_ORDER = {
     "customers": 1,
     "products": 2,

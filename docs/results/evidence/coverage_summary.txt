@@ -1,0 +1,4 @@
+Tests passed: 38
+Project-wide coverage: 23.36%
+Required threshold: 60.00%
+Threshold status: failed

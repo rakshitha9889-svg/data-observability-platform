@@ -1,0 +1,9 @@
+Tests passed: 38
+Tests skipped: 0
+Coverage scope: assistant package
+Statements: 395
+Covered lines: 335
+Missing lines: 60
+Coverage: 77.90%
+Required threshold: 60.00%
+Threshold status: passed

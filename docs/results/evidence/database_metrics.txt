@@ -1,0 +1,43 @@
+ source_feeds 
+--------------
+            7
+(1 row)
+
+ records_processed 
+-------------------
+             21432
+(1 row)
+
+ table_schema  | table_count 
+---------------+-------------
+ analytics     |           7
+ observability |           9
+ quarantine    |           1
+ raw           |           7
+(4 rows)
+
+ failure_scenarios 
+-------------------
+                11
+(1 row)
+
+ failures_detected | total_scenarios | detection_rate_percentage 
+-------------------+-----------------+---------------------------
+                11 |              11 |                    100.00
+(1 row)
+
+ lineage_assets 
+----------------
+             96
+(1 row)
+
+ lineage_edges 
+---------------
+           102
+(1 row)
+
+ average_pipeline_runtime_seconds 
+----------------------------------
+                             0.14
+(1 row)
+

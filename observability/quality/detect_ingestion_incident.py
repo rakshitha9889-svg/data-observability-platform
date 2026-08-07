@@ -10,7 +10,6 @@ from observability.incidents.incident_service import (
     load_active_experiment,
 )
 
-
 INGESTION_SCENARIOS = {
     "duplicate_order_id",
     "null_customer_id",

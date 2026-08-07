@@ -1,0 +1,16 @@
+-[ RECORD 1 ]-------------+-----------------------------------------------------------------------------------------------------
+experiment_id             | 7a104da5-858b-4dc8-8c2d-fb21b9e4ba11
+scenario_name             | null_customer_id
+batch_date                | 2026-04-07
+expected_detection_layer  | ingestion_validation
+expected_severity         | medium
+status                    | completed
+detected                  | t
+actual_detection_layer    | ingestion_validation
+prepared_at               | 2026-07-29 15:45:57.485602+00
+started_at                | 2026-07-29 15:46:07.850397+00
+detected_at               | 2026-07-29 15:46:09.328542+00
+completed_at              | 2026-07-29 15:49:00.258672+00
+time_to_detection_seconds | 1.478
+notes                     | An order has a null customer ID. Experiment evidence preserved and experimental source rows cleaned.
+

@@ -13,7 +13,6 @@ from observability.incidents.incident_service import (
     load_active_experiment,
 )
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 INCOMING_DIRECTORY = PROJECT_ROOT / "data" / "incoming"
 

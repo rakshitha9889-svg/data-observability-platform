@@ -1,0 +1,12 @@
+{
+  "incident_id": "732540bc-966d-40ef-a6c6-2dce53ad6995",
+  "total_questions": 25,
+  "passed_questions": 25,
+  "overall_pass_rate_percentage": 100.0,
+  "intent_accuracy_percentage": 100.0,
+  "refusal_accuracy_percentage": 100.0,
+  "content_accuracy_percentage": 100.0,
+  "citation_accuracy_percentage": 100.0,
+  "average_latency_ms": 7.58,
+  "maximum_latency_ms": 69.57
+}

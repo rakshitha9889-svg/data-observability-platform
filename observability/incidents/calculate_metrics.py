@@ -8,7 +8,6 @@ from observability.incidents.incident_service import (
     create_database_engine,
 )
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RESULTS_DIRECTORY = (

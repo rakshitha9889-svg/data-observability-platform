@@ -161,6 +161,14 @@ with DAG(
             exit $DBT_EXIT_CODE
         """,
     )
+
+    refresh_lineage_metadata = BashOperator(
+        task_id="refresh_lineage_metadata",
+        bash_command=f"""
+            cd "{PROJECT_DIRECTORY}"
+            python -m observability.lineage.load_lineage
+        """,
+    )
     notify_success = BashOperator(
         task_id="notify_success",
         bash_command="""
@@ -179,13 +187,16 @@ with DAG(
         )
 
     (
+            (
         wait_for_source_files
         >> validated_files
         >> run_pre_ingestion_checks
         >> load_raw_data
         >> run_dbt_models
         >> run_dbt_tests_and_capture_results
+        >> refresh_lineage_metadata
         >> notify_success
+            )
     )
 
    

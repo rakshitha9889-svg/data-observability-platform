@@ -1,0 +1,59 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.5, pytest-8.4.1, pluggy-1.6.0
+rootdir: /Users/rakshithars/Documents/data-observability-platform
+configfile: pytest.ini
+testpaths: tests
+plugins: Faker-37.4.0, typeguard-4.5.2, anyio-4.14.2, cov-6.2.1
+collected 38 items
+
+tests/e2e/test_incident_workflow.py .......                              [ 18%]
+tests/integration/test_incident_api.py ............                      [ 50%]
+tests/unit/test_incident_assistant.py ...................
+ERROR: Coverage failure: total of 23.36 is less than fail-under=60.00
+                                                                         [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.13.5-final-0 _______________
+
+Name                                                 Stmts   Miss Branch BrPart   Cover   Missing
+-------------------------------------------------------------------------------------------------
+assistant/__init__.py                                    0      0      0      0 100.00%
+assistant/api/__init__.py                                0      0      0      0 100.00%
+assistant/api/main.py                                   55     17      6      0  62.30%   70-109, 124-125, 169-170
+assistant/config.py                                     23      1      2      1  92.00%   25
+assistant/models.py                                     35      0      0      0 100.00%
+assistant/prompts/__init__.py                            0      0      0      0 100.00%
+assistant/question_answerer.py                          51      9     24      3  81.33%   185-187, 216-230, 292
+assistant/response_generator.py                        157     29     74     35  71.43%   18->exit, 28, 33, 44, 49, 148->154, 171->175, 180->183, 183->186, 186->189, 197->206, 200->206, 206->218, 219-227, 230-238, 241, 261->284, 268->271, 271->274, 274->277, 287, 301-312, 315, 334-351, 365->371, 371->378, 378->384, 384->390, 399->402, 402->405, 406, 409, 412, 415, 420
+assistant/retrieval/__init__.py                          0      0      0      0 100.00%
+assistant/retrieval/database.py                         13      1      2      1  86.67%   30
+assistant/retrieval/evidence_retriever.py               61      3     22      6  89.16%   150, 299, 308->313, 313->316, 317, 319->322
+ingestion/__init__.py                                    0      0      0      0 100.00%
+ingestion/config.py                                     22     22      2      0   0.00%   1-37
+ingestion/database.py                                   67     67     12      0   0.00%   1-367
+ingestion/file_utils.py                                 71     71     18      0   0.00%   1-197
+ingestion/loaders/__init__.py                            0      0      0      0 100.00%
+ingestion/logging_config.py                              7      7      0      0   0.00%   1-16
+ingestion/run_pipeline.py                               95     95     14      0   0.00%   1-351
+ingestion/schemas/__init__.py                            0      0      0      0 100.00%
+ingestion/validation.py                                124    124     58      0   0.00%   1-505
+observability/__init__.py                                0      0      0      0 100.00%
+observability/incidents/__init__.py                      0      0      0      0 100.00%
+observability/incidents/calculate_metrics.py            39     39      2      0   0.00%   1-177
+observability/incidents/complete_experiment.py          62     62      6      0   0.00%   1-227
+observability/incidents/incident_service.py             45     45      4      0   0.00%   1-199
+observability/incidents/inject_failure.py              165    165      8      0   0.00%   1-526
+observability/lineage/__init__.py                        0      0      0      0 100.00%
+observability/lineage/impact_analysis.py                43     43      8      0   0.00%   1-217
+observability/lineage/link_incident_impact.py           24     24      2      0   0.00%   1-96
+observability/lineage/load_lineage.py                   94     94     30      0   0.00%   1-395
+observability/quality/__init__.py                        0      0      0      0 100.00%
+observability/quality/capture_dbt_results.py            32     32      8      0   0.00%   1-144
+observability/quality/detect_dbt_incident.py            30     30      8      0   0.00%   1-99
+observability/quality/detect_ingestion_incident.py      52     52     14      0   0.00%   1-210
+observability/quality/pre_ingestion_checks.py           48     48     12      0   0.00%   1-160
+-------------------------------------------------------------------------------------------------
+TOTAL                                                 1415   1080    336     46  23.36%
+Coverage JSON written to file docs/results/evidence/coverage.json
+FAIL Required test coverage of 60.0% not reached. Total coverage: 23.36%
+============================== 38 passed in 0.60s ==============================

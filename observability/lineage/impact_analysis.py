@@ -10,7 +10,6 @@ from observability.lineage.load_lineage import (
     create_database_engine,
 )
 
-
 DOWNSTREAM_IMPACT_QUERY = text(
     """
     WITH RECURSIVE downstream_impact AS (

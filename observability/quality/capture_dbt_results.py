@@ -6,7 +6,6 @@ from pathlib import Path
 
 from sqlalchemy import create_engine, text
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 RUN_RESULTS_PATH = (

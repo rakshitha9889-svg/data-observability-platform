@@ -5,7 +5,6 @@ from typing import Any
 
 import pandas as pd
 
-
 REQUIRED_COLUMNS = {
     "customers": [
         "customer_id",

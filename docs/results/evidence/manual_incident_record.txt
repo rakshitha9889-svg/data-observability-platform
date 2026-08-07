@@ -1,0 +1,23 @@
+-[ RECORD 1 ]----+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+incident_id      | 1d2cb9de-abdb-4e46-8ab5-805b0d035109
+run_id           | 
+test_result_id   | 
+incident_type    | data_quality
+severity         | medium
+status           | resolved
+source           | ingestion_validation
+affected_entity  | orders
+affected_table   | raw.orders
+title            | Ingestion validation failure: null_customer_id
+description      | 1 invalid record(s) were quarantined before reaching raw tables.
+failed_rule      | customer_id must not be null or empty
+evidence         | {"records": [{"entity_name": "orders", "failed_rule": "customer_id must not be null or empty", "record_data": {"status": "completed", "currency": "EUR", "order_id": "ORD_00000478", "order_date": "2026-04-07 18:23:01", "customer_id": null, "order_total": 395.12}, "source_file": "orders_2026-04-07.csv", "quarantine_id": "eee95ce5-58f2-44d5-aa01-f48bcea17fa9", "failure_reason": "customer_id must not be null or empty", "quarantined_at": "2026-07-29 15:46:08.946649+00:00", "source_row_number": 2}], "injection_evidence": {"change": "Set the first customer_id to null.", "affected_file": "orders_2026-04-07.csv", "affected_value": "ORD_00000478"}, "quarantined_record_count": 1}
+suspected_cause  | 
+resolution_notes | Experimental source rows removed and the clean analytical baseline restored. {"deleted_raw_rows": {"order_items": 211, "payments": 75, "shipments": 75, "inventory": 1140, "orders": 74}, "archived_remaining_files": []}
+detected_at      | 2026-07-29 15:46:09.328542+00
+acknowledged_at  | 
+resolved_at      | 2026-07-29 15:49:00.258672+00
+created_at       | 2026-07-29 15:46:09.328542+00
+updated_at       | 2026-07-29 15:49:00.258672+00
+experiment_id    | 7a104da5-858b-4dc8-8c2d-fb21b9e4ba11
+
