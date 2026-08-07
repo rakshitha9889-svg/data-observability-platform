@@ -150,7 +150,7 @@ detection status and time to detection.
 ## Measured results
 
 Measurements were recorded on 6 August 2026 using Git commit
-`4a116a7442a79761760e7b1cbec0d49d58f72976`.
+`7189f63a4164df758c8057c7633d911db8e83b42`.
 
 | Metric | Result |
 |---|---:|

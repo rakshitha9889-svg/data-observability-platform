@@ -3,7 +3,7 @@
 ## Reproducibility information
 
 - Experiment date: 2026-08-06T18:15:03Z
-- Git commit: `4a116a7442a79761760e7b1cbec0d49d58f72976`
+- Git commit: `7189f63a4164df758c8057c7633d911db8e83b42`
 - Execution environment: macOS, Python 3.13.5, PostgreSQL 16, Docker Compose
 - Evidence directory: `docs/results/evidence/`
 
