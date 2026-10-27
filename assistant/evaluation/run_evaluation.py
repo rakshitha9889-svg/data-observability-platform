@@ -1,4 +1,5 @@
 import json
+import sys
 import time
 from pathlib import Path
 from statistics import mean
@@ -8,12 +9,23 @@ import requests
 
 INCIDENT_ID = "732540bc-966d-40ef-a6c6-2dce53ad6995"
 
-API_URL = f"http://localhost:8000/api/v1/incidents/{INCIDENT_ID}/questions"
+# Usage: python -m assistant.evaluation.run_evaluation [mode] [label]
+#   mode:  rules (default) or llm
+#   label: name for the results file, e.g. llm-claude or llm-ollama
+MODE = sys.argv[1] if len(sys.argv) > 1 else "rules"
+LABEL = sys.argv[2] if len(sys.argv) > 2 else MODE
+
+API_URL = (
+    f"http://localhost:8000/api/v1/incidents/{INCIDENT_ID}/questions"
+    f"?mode={MODE}"
+)
 
 EVALUATION_DIRECTORY = Path(__file__).resolve().parent
 
 QUESTIONS_FILE = EVALUATION_DIRECTORY / "questions.json"
-RESULTS_FILE = EVALUATION_DIRECTORY / "results.json"
+RESULTS_FILE = EVALUATION_DIRECTORY / (
+    "results.json" if LABEL == "rules" else f"results_{LABEL}.json"
+)
 
 
 def load_questions() -> list[dict[str, Any]]:
@@ -157,6 +169,8 @@ def main() -> None:
 
     summary = {
         "incident_id": INCIDENT_ID,
+        "mode": MODE,
+        "label": LABEL,
         "total_questions": total,
         "passed_questions": passed_count,
         "overall_pass_rate_percentage": (

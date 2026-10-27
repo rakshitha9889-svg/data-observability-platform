@@ -7,6 +7,7 @@ omit =
     assistant/evaluation/*
     assistant/answer_incident.py
     assistant/retrieval/build_evidence.py
+    assistant/rag/index_runbooks.py
 
 [report]
 show_missing = True

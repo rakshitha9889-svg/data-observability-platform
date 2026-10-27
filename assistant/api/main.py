@@ -1,3 +1,5 @@
+import logging
+from typing import Literal
 from uuid import UUID
 
 from fastapi import FastAPI, HTTPException, Query
@@ -16,6 +18,8 @@ from assistant.retrieval.evidence_retriever import (
     IncidentEvidenceRetriever,
     make_json_safe,
 )
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Data Observability Incident Assistant",
@@ -43,6 +47,8 @@ retriever = IncidentEvidenceRetriever()
 generator = IncidentResponseGenerator()
 
 question_answerer = IncidentQuestionAnswerer()
+
+_llm_answerer = None
 
 
 @app.get("/")
@@ -147,6 +153,19 @@ def investigate_incident(
         ) from error
 
 
+def get_llm_answerer():
+    """Create the LLM answerer on first use, so the API starts without
+    LLM dependencies or API keys and rule-based mode keeps working."""
+    global _llm_answerer
+
+    if _llm_answerer is None:
+        from assistant.llm.llm_question_answerer import LLMQuestionAnswerer
+
+        _llm_answerer = LLMQuestionAnswerer()
+
+    return _llm_answerer
+
+
 @app.post(
     "/api/v1/incidents/{incident_id}/questions",
     response_model=InvestigationQuestionResponse,
@@ -154,17 +173,38 @@ def investigate_incident(
 def answer_incident_question(
     incident_id: UUID,
     request: InvestigationQuestionRequest,
+    mode: Literal["rules", "llm"] = Query(default="rules"),
 ) -> InvestigationQuestionResponse:
     try:
         evidence_bundle = retriever.build_evidence_bundle(str(incident_id))
 
+        fallback_reason = None
+
+        if mode == "llm":
+            try:
+                return get_llm_answerer().answer(
+                    request.question,
+                    evidence_bundle,
+                )
+            except Exception as error:  # noqa: BLE001 - fall back to rules
+                logger.warning("LLM mode failed, using rules: %s", error)
+                fallback_reason = (
+                    "LLM mode was unavailable, so the rule-based "
+                    f"assistant answered instead ({type(error).__name__})."
+                )
+
         investigation = generator.generate(evidence_bundle)
 
-        return question_answerer.answer(
+        response = question_answerer.answer(
             question=request.question,
             bundle=evidence_bundle,
             investigation=investigation,
         )
+
+        if fallback_reason:
+            response.limitations.append(fallback_reason)
+
+        return response
 
     except ValueError as error:
         raise HTTPException(

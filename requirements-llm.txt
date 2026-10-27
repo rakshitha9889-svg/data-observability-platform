@@ -1,0 +1,6 @@
+# Optional: dependencies for the LLM incident-triage mode (?mode=llm).
+# Install locally with: pip install -r requirements-llm.txt
+# Not needed for CI or for the rule-based API image.
+sentence-transformers==6.2.0
+langchain-anthropic==1.7.6
+langchain-ollama==1.1.0

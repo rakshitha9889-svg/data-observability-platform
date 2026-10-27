@@ -419,3 +419,37 @@ This includes:
 ## License
 
 This project is intended for educational and portfolio use.
+## LLM incident-triage mode (in progress)
+
+The question endpoint accepts `?mode=rules` (default, the rule-based
+assistant) or `?mode=llm`. In LLM mode the model sees only the SQL evidence
+bundle plus the three most relevant runbook sections (pgvector search), must
+return a fixed schema, and any citation that does not match retrieved
+evidence is removed and reported. If the LLM call fails, the rule-based
+assistant answers and the response says so.
+
+Setup:
+
+```bash
+pip install -r requirements-llm.txt
+docker compose up -d postgres            # now pgvector/pgvector:pg16
+psql ... -f database/migrations/09_create_runbook_vectors.sql
+python -m assistant.rag.index_runbooks   # embed runbooks/
+uvicorn assistant.api.main:app --reload
+```
+
+`.env` needs `LLM_PROVIDER` (`claude` or `ollama`), plus `ANTHROPIC_API_KEY`
+and `CLAUDE_MODEL` for Claude, or `OLLAMA_MODEL` for a local model.
+
+Evaluation (rules vs Claude vs local model):
+
+```bash
+python -m assistant.evaluation.run_evaluation llm llm-claude
+python -m assistant.evaluation.root_cause_eval llm llm-claude
+```
+
+| Mode | 25-question pass rate | Root causes correct | Answers with removed citations | Avg latency |
+| --- | --- | --- | --- | --- |
+| Rules (baseline) | 100% | _to run_ | 0 | |
+| LLM + RAG, Claude | _to run_ | _to run_ | | |
+| LLM + RAG, local Llama | _to run_ | _to run_ | | |

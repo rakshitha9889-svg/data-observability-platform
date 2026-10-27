@@ -228,3 +228,60 @@ def test_invalid_uuid_returns_422(client):
     response = client.get("/api/v1/incidents/not-a-uuid/investigation")
 
     assert response.status_code == 422
+
+
+class FakeLLMAnswerer:
+    def answer(self, question, bundle):
+        from assistant.models import InvestigationQuestionResponse
+
+        return InvestigationQuestionResponse(
+            incident_id=bundle.incident_id,
+            question=question,
+            answer="Hypothesis: a negative payment amount.",
+            response_type="cause_or_hypothesis",
+            confidence="medium",
+            citations=[bundle.incident.evidence_id],
+        )
+
+
+def test_llm_mode_uses_llm_answerer(client, monkeypatch):
+    monkeypatch.setattr(
+        "assistant.api.main.get_llm_answerer",
+        lambda: FakeLLMAnswerer(),
+    )
+
+    response = client.post(
+        f"/api/v1/incidents/{INCIDENT_ID}/questions?mode=llm",
+        json={"question": "What was the likely root cause?"},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["answer"] == "Hypothesis: a negative payment amount."
+    assert payload["citations"] == [f"observability.incidents:{INCIDENT_ID}"]
+
+
+def test_llm_mode_falls_back_to_rules(client, monkeypatch):
+    def unavailable():
+        raise RuntimeError("no API key")
+
+    monkeypatch.setattr("assistant.api.main.get_llm_answerer", unavailable)
+
+    response = client.post(
+        f"/api/v1/incidents/{INCIDENT_ID}/questions?mode=llm",
+        json={"question": "What was the likely root cause?"},
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["response_type"] == "cause_or_hypothesis"
+    assert any("rule-based" in note for note in payload["limitations"])
+
+
+def test_unknown_mode_returns_422(client):
+    response = client.post(
+        f"/api/v1/incidents/{INCIDENT_ID}/questions?mode=magic",
+        json={"question": "What happened?"},
+    )
+
+    assert response.status_code == 422

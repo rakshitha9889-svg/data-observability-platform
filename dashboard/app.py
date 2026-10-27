@@ -1103,6 +1103,16 @@ def show_assistant() -> None:
         key=f"incident_question_{selected_incident_id}",
     )
 
+    answer_mode = st.radio(
+        "Answer mode",
+        options=["rules", "llm"],
+        format_func=lambda mode: (
+            "Rule-based (baseline)" if mode == "rules" else "LLM + runbooks"
+        ),
+        horizontal=True,
+        key=f"answer_mode_{selected_incident_id}",
+    )
+
     ask_button = st.button(
         "Ask Assistant",
         type="primary",
@@ -1119,6 +1129,7 @@ def show_assistant() -> None:
                     (
                         f"/api/v1/incidents/"
                         f"{selected_incident_id}/questions"
+                        f"?mode={answer_mode}"
                     ),
                     {
                         "question": question.strip(),
